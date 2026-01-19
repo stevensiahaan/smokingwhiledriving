@@ -1,3 +1,4 @@
+import { useState } from "react";
 import HeroSection from "@/components/landing/HeroSection";
 import SimulationSection from "@/components/landing/SimulationSection";
 import StatisticsSection from "@/components/landing/StatisticsSection";
@@ -9,6 +10,8 @@ import CTASection from "@/components/landing/CTASection";
 import Footer from "@/components/landing/Footer";
 
 const Index = () => {
+  const [language, setLanguage] = useState<"id" | "en">("id");
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <HeroSection />
@@ -19,7 +22,7 @@ const Index = () => {
       <LegalSection />
       <DistractionCards />
       <CTASection />
-      <Footer />
+      <Footer language={language} onLanguageChange={setLanguage} />
     </div>
   );
 };
