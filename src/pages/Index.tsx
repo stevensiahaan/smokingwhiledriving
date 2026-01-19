@@ -14,14 +14,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <HeroSection />
-      <SimulationSection />
-      <StatisticsSection />
-      <GalleryOfShame />
-      <VictimStories />
-      <LegalSection />
-      <DistractionCards />
-      <CTASection />
+      <HeroSection language={language} />
+      <SimulationSection language={language} />
+      <StatisticsSection language={language} />
+      <GalleryOfShame language={language} />
+      <VictimStories language={language} />
+      <LegalSection language={language} />
+      <DistractionCards language={language} />
+      <CTASection language={language} />
       <Footer language={language} onLanguageChange={setLanguage} />
     </div>
   );
