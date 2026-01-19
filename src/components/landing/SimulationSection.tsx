@@ -2,13 +2,80 @@ import { useState, useEffect } from "react";
 import { Eye, Timer, Car } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
-const SimulationSection = () => {
+interface SimulationSectionProps {
+  language: "id" | "en";
+}
+
+const SimulationSection = ({ language }: SimulationSectionProps) => {
   const [speed, setSpeed] = useState([60]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSecond, setCurrentSecond] = useState(0);
   const [carPosition, setCarPosition] = useState(0);
 
-  const distanceInMeters = ((speed[0] * 1000) / 3600) * 5; // 5 seconds of distraction
+  const distanceInMeters = ((speed[0] * 1000) / 3600) * 5;
+
+  const content = {
+    id: {
+      badge: "Simulasi Visual",
+      title: '"Mata Lo Kemana Aja?"',
+      subtitle: "5 detik untuk menyalakan rokok. Lihat apa yang terjadi saat mata kamu tidak di jalan.",
+      speedLabel: "Kecepatan Kendaraan:",
+      distanceIntro: "Dalam 5 detik, kamu akan menempuh jarak:",
+      meters: "meter",
+      blindWarning: "TANPA MELIHAT JALAN!",
+      blindZone: "ZONA BUTA",
+      second: "Detik",
+      seconds: "detik",
+      running: "Simulasi Berjalan...",
+      start: "Mulai Simulasi",
+      impactIntro: "meter, banyak hal bisa terjadi:",
+      impacts: [
+        "Anak kecil menyeberang",
+        "Motor menyalip",
+        "Mobil depan berhenti mendadak",
+        "Lubang jalan",
+        "Pejalan kaki",
+      ],
+      events: [
+        { second: 1, action: "Ambil rokok dari kantong", icon: "🚬" },
+        { second: 2, action: "Cari korek/lighter", icon: "🔥" },
+        { second: 3, action: "Nyalakan rokok", icon: "💨" },
+        { second: 4, action: "Buang korek, pegang rokok", icon: "✋" },
+        { second: 5, action: "MATA MASIH BELUM DI JALAN!", icon: "💀" },
+      ],
+    },
+    en: {
+      badge: "Visual Simulation",
+      title: '"Where Are Your Eyes?"',
+      subtitle: "5 seconds to light a cigarette. See what happens when your eyes aren't on the road.",
+      speedLabel: "Vehicle Speed:",
+      distanceIntro: "In 5 seconds, you will travel:",
+      meters: "meters",
+      blindWarning: "WITHOUT LOOKING AT THE ROAD!",
+      blindZone: "BLIND ZONE",
+      second: "Second",
+      seconds: "seconds",
+      running: "Simulation Running...",
+      start: "Start Simulation",
+      impactIntro: "meters, many things can happen:",
+      impacts: [
+        "Child crossing the road",
+        "Motorcycle overtaking",
+        "Car ahead stops suddenly",
+        "Pothole",
+        "Pedestrian",
+      ],
+      events: [
+        { second: 1, action: "Take cigarette from pocket", icon: "🚬" },
+        { second: 2, action: "Find lighter", icon: "🔥" },
+        { second: 3, action: "Light cigarette", icon: "💨" },
+        { second: 4, action: "Put away lighter, hold cigarette", icon: "✋" },
+        { second: 5, action: "EYES STILL NOT ON ROAD!", icon: "💀" },
+      ],
+    },
+  };
+
+  const t = content[language];
 
   useEffect(() => {
     if (isPlaying && currentSecond < 5) {
@@ -28,14 +95,6 @@ const SimulationSection = () => {
     setIsPlaying(true);
   };
 
-  const distractionEvents = [
-    { second: 1, action: "Ambil rokok dari kantong", icon: "🚬" },
-    { second: 2, action: "Cari korek/lighter", icon: "🔥" },
-    { second: 3, action: "Nyalakan rokok", icon: "💨" },
-    { second: 4, action: "Buang korek, pegang rokok", icon: "✋" },
-    { second: 5, action: "MATA MASIH BELUM DI JALAN!", icon: "💀" },
-  ];
-
   return (
     <section className="bg-secondary/30 relative overflow-hidden">
       <div className="section-container">
@@ -44,21 +103,21 @@ const SimulationSection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-danger/20 border border-danger/50 rounded-full mb-4">
             <Eye className="w-5 h-5 text-danger" />
             <span className="text-danger font-semibold text-sm uppercase tracking-wider">
-              Simulasi Visual
+              {t.badge}
             </span>
           </div>
           <h2 className="text-3xl md:text-5xl font-black mb-4">
-            "Mata Lo Kemana Aja?"
+            {t.title}
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            5 detik untuk menyalakan rokok. Lihat apa yang terjadi saat mata kamu tidak di jalan.
+            {t.subtitle}
           </p>
         </div>
 
         {/* Speed slider */}
         <div className="max-w-md mx-auto mb-8">
           <label className="block text-sm font-medium text-muted-foreground mb-4 text-center">
-            Kecepatan Kendaraan: <span className="text-foreground font-bold text-xl">{speed[0]} km/jam</span>
+            {t.speedLabel} <span className="text-foreground font-bold text-xl">{speed[0]} km/{language === "id" ? "jam" : "h"}</span>
           </label>
           <Slider
             value={speed}
@@ -69,21 +128,21 @@ const SimulationSection = () => {
             className="w-full"
           />
           <div className="flex justify-between text-xs text-muted-foreground mt-2">
-            <span>40 km/jam</span>
-            <span>120 km/jam</span>
+            <span>40 km/{language === "id" ? "jam" : "h"}</span>
+            <span>120 km/{language === "id" ? "jam" : "h"}</span>
           </div>
         </div>
 
         {/* Distance result */}
         <div className="text-center mb-12">
           <p className="text-lg text-muted-foreground">
-            Dalam 5 detik, kamu akan menempuh jarak:
+            {t.distanceIntro}
           </p>
           <p className="text-5xl md:text-7xl font-black text-danger mt-2">
-            {distanceInMeters.toFixed(0)} meter
+            {distanceInMeters.toFixed(0)} {t.meters}
           </p>
           <p className="text-muted-foreground mt-2">
-            <span className="text-warning font-semibold">TANPA MELIHAT JALAN!</span>
+            <span className="text-warning font-semibold">{t.blindWarning}</span>
           </p>
         </div>
 
@@ -117,7 +176,7 @@ const SimulationSection = () => {
                 style={{ left: 0, width: `${carPosition}%` }}
               >
                 <span className="absolute top-1 left-1 text-xs text-danger font-bold">
-                  ZONA BUTA
+                  {t.blindZone}
                 </span>
               </div>
             )}
@@ -125,7 +184,7 @@ const SimulationSection = () => {
 
           {/* Timeline */}
           <div className="grid grid-cols-5 gap-2">
-            {distractionEvents.map((event, index) => (
+            {t.events.map((event, index) => (
               <div
                 key={event.second}
                 className={`text-center p-3 rounded-lg transition-all duration-300 ${
@@ -136,7 +195,7 @@ const SimulationSection = () => {
               >
                 <div className="text-2xl mb-1">{event.icon}</div>
                 <div className="text-xs font-medium">
-                  Detik {event.second}
+                  {t.second} {event.second}
                 </div>
                 <div className="text-xs mt-1 hidden md:block">
                   {event.action}
@@ -149,7 +208,7 @@ const SimulationSection = () => {
           <div className="flex items-center justify-center gap-4 mt-6">
             <Timer className="w-6 h-6 text-muted-foreground" />
             <span className="text-4xl font-mono font-bold text-foreground">
-              {currentSecond} / 5 detik
+              {currentSecond} / 5 {t.seconds}
             </span>
           </div>
 
@@ -160,7 +219,7 @@ const SimulationSection = () => {
               disabled={isPlaying}
               className="px-8 py-4 bg-danger text-danger-foreground font-bold text-lg rounded-lg hover:bg-danger/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isPlaying ? "Simulasi Berjalan..." : "Mulai Simulasi"}
+              {isPlaying ? t.running : t.start}
             </button>
           </div>
         </div>
@@ -168,16 +227,10 @@ const SimulationSection = () => {
         {/* Impact message */}
         <div className="text-center">
           <p className="text-lg text-muted-foreground">
-            Dalam {distanceInMeters.toFixed(0)} meter, banyak hal bisa terjadi:
+            {language === "id" ? "Dalam" : "In"} {distanceInMeters.toFixed(0)} {t.impactIntro}
           </p>
           <div className="flex flex-wrap justify-center gap-4 mt-4">
-            {[
-              "Anak kecil menyeberang",
-              "Motor menyalip",
-              "Mobil depan berhenti mendadak",
-              "Lubang jalan",
-              "Pejalan kaki",
-            ].map((item) => (
+            {t.impacts.map((item) => (
               <span
                 key={item}
                 className="px-4 py-2 bg-blood/30 border border-danger/50 rounded-full text-sm text-foreground"
